@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install selenium pandas gspread oauth2client gspread-dataframe webdriver-manager openpyxl
+          pip install selenium pandas gspread oauth2client gspread-dataframe webdriver-manager openpyxl pytz
 
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@latest
