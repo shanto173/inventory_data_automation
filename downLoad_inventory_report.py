@@ -17,7 +17,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
 # === Setup Logging ===
-sys.stdout.reconfigure(line_buffering=True)
+# This sets up logging to the console (GitHub Actions will capture this)
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 log = logging.getLogger()
 
