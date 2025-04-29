@@ -26,9 +26,12 @@ jobs:
         uses: browser-actions/setup-chrome@latest
 
       - name: Create creds file
-        run: echo "${{ secrets.GCREDS_JSON }}" > gcreds.json
+        run: |
+          echo "${{ secrets.GCREDS_JSON }}" | base64 -d > gcreds.json
 
       - name: Run script
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
         run: python downLoad_inventory_report.py
 
       - name: Clean up creds
