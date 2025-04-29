@@ -1,3 +1,5 @@
+import sys
+import logging
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -14,12 +16,17 @@ from gspread_dataframe import set_with_dataframe
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
+# === Setup Logging ===
+sys.stdout.reconfigure(line_buffering=True)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+log = logging.getLogger()
+
 # === Setup: Linux-compatible download directory ===
 download_dir = os.path.join(os.getcwd(), "download")
 os.makedirs(download_dir, exist_ok=True)
 
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")  # Comment this line for debug
 chrome_options.add_argument("--disable-gpu")
 chrome_options.add_argument("--window-size=1920,1080")
 chrome_options.add_argument("--no-sandbox")
@@ -36,11 +43,14 @@ pattern = "Stock Opening  Closing Report (stock.opening.closing)"
 def is_file_downloaded():
     return any(Path(download_dir).glob(f"*{pattern}*.xlsx"))
 
-while True:
+# === Debugging Loop ===
+for attempt in range(3):  # Adjust attempts for debugging
     try:
+        log.info("Attempting to start the browser...")
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
         wait = WebDriverWait(driver, 20)
 
+        log.info("Navigating to login page...")
         driver.get("https://taps.odoo.com")
         wait.until(EC.presence_of_element_located((By.NAME, "login"))).send_keys("supply.chain3@texzipperbd.com")
         driver.find_element(By.NAME, "password").send_keys("@Shanto@86")
@@ -48,10 +58,12 @@ while True:
         time.sleep(2)
 
         try:
+            log.info("Waiting for modal to disappear...")
             wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".modal-backdrop")))
-        except:
-            pass
+        except Exception as e:
+            log.warning(f"Modal did not disappear: {e}")
 
+        log.info("Switching company...")
         switcher_span = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR,
             "div.o_menu_systray div.o_switch_company_menu > button > span"
         )))
@@ -59,6 +71,7 @@ while True:
         switcher_span.click()
         time.sleep(2)
 
+        log.info("Selecting 'Zipper' company...")
         target_div = wait.until(EC.element_to_be_clickable((By.XPATH,
             "//div[contains(@class, 'log_into')][span[contains(text(), 'Zipper')]]"
         )))
@@ -69,6 +82,7 @@ while True:
         driver.get("https://taps.odoo.com/web#action=441&model=stock.picking.type&view_type=kanban&cids=1&menu_id=280")
         wait.until(EC.presence_of_element_located((By.XPATH, "//html")))
 
+        log.info("Clicking export button...")
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/header/nav/div[1]/div[3]/button/span"))).click()
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/header/nav/div[1]/div[3]/div/a[2]"))).click()
         first_day_of_month = datetime.today().replace(day=1).strftime("%d/%m/%Y")
@@ -76,6 +90,7 @@ while True:
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/footer/footer/button[1]"))).click()
         time.sleep(5)
 
+        log.info("Confirming file export...")
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div[3]/button"))).click()
         time.sleep(5)
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/table/thead/tr/th[1]/div"))).click()
@@ -94,7 +109,7 @@ while True:
         time.sleep(7)
 
         if is_file_downloaded():
-            print("✅ File download complete!")
+            log.info("✅ File download complete!")
             files = list(Path(download_dir).glob(f"*{pattern}*.xlsx"))
             if len(files) > 1:
                 files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
@@ -103,10 +118,10 @@ while True:
             driver.quit()
             break
         else:
-            raise Exception("File not downloaded. Retrying...")
+            log.warning("⚠️ File not downloaded. Retrying...")
 
     except Exception as e:
-        print(f"⚠️ Error occurred: {e}\nRetrying in 10 seconds...\n")
+        log.error(f"❌ Error occurred: {e}\nRetrying in 10 seconds...\n")
         try:
             driver.quit()
         except:
@@ -115,6 +130,7 @@ while True:
 
 # === Step: Upload to Google Sheets ===
 try:
+    log.info("Checking for downloaded files...")
     files = list(Path(download_dir).glob(f"*{pattern}*.xlsx"))
     if not files:
         raise Exception("No matching file found.")
@@ -122,7 +138,7 @@ try:
     files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
     latest_file = files[0]
     df = pd.read_excel(latest_file)
-    print("✅ File loaded into DataFrame.")
+    log.info("✅ File loaded into DataFrame.")
 
     # Use credentials stored in gcreds.json (created in GitHub Action)
     scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
@@ -136,7 +152,7 @@ try:
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     worksheet.update("W2", [[f"{timestamp}"]])
-    print(f"✅ Data pasted & timestamp updated: {timestamp}")
+    log.info(f"✅ Data pasted & timestamp updated: {timestamp}")
 
 except Exception as e:
-    print(f"❌ Error while pasting to Google Sheets: {e}")
+    log.error(f"❌ Error while pasting to Google Sheets: {e}")
