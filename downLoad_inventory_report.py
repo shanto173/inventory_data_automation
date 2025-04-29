@@ -46,7 +46,7 @@ def is_file_downloaded():
     return any(Path(download_dir).glob(f"*{pattern}*.xlsx"))
 
 # === Debugging Loop ===
-for attempt in range(3):  # Adjust attempts for debugging
+while True:  # Infinite loop until the file is downloaded
     try:
         log.info("Attempting to start the browser...")
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
@@ -118,7 +118,7 @@ for attempt in range(3):  # Adjust attempts for debugging
                 for file in files[1:]:
                     file.unlink()
             driver.quit()
-            break
+            break  # Exit the loop after file download is complete
         else:
             log.warning("⚠️ File not downloaded. Retrying...")
 
