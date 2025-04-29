@@ -18,6 +18,12 @@ jobs:
         with:
           python-version: '3.10'
 
+      - name: Set timezone to Asia/Dhaka
+        run: |
+          sudo ln -sf /usr/share/zoneinfo/Asia/Dhaka /etc/localtime
+          sudo dpkg-reconfigure -f noninteractive tzdata
+          date  # Just to confirm the timezone is set
+
       - name: Install dependencies
         run: |
           pip install selenium pandas gspread oauth2client gspread-dataframe webdriver-manager openpyxl
@@ -26,12 +32,9 @@ jobs:
         uses: browser-actions/setup-chrome@latest
 
       - name: Create creds file
-        run: |
-          echo "${{ secrets.GCREDS_JSON }}" | base64 -d > gcreds.json
+        run: echo "${{ secrets.GCREDS_JSON }}" > gcreds.json
 
       - name: Run script
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
         run: python downLoad_inventory_report.py
 
       - name: Clean up creds
