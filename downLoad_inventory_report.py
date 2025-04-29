@@ -11,9 +11,10 @@ import time
 import re
 from pathlib import Path
 import pandas as pd
+from google.auth.transport.requests import Request
+from google.oauth2 import service_account
 import gspread
 from gspread_dataframe import set_with_dataframe
-from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
 # === Setup Logging ===
@@ -142,7 +143,12 @@ try:
 
     # Use credentials stored in gcreds.json (created in GitHub Action)
     scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name("gcreds.json", scope)
+    
+    # Use google-auth to load credentials
+    creds = service_account.Credentials.from_service_account_file('gcreds.json', scopes=scope)
+    log.info("✅ Successfully loaded credentials.")
+
+    # Use gspread to authorize and access Google Sheets
     client = gspread.authorize(creds)
 
     sheet = client.open_by_key("1z6Zb_BronrO26rNS_gCKmsetoY7_OFysfIyvU3iazy0")
