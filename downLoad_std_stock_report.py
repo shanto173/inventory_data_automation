@@ -28,12 +28,11 @@ download_dir = os.path.join(os.getcwd(), "download")
 os.makedirs(download_dir, exist_ok=True)
 
 chrome_options = webdriver.ChromeOptions()
-chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless")  # 🔹 Run Chrome in headless mode
-# chrome_options.add_argument("--disable-gpu")  # Optional: disable GPU usage
+chrome_options.add_argument("--disable-gpu")  # Optional: disable GPU usage
 # chrome_options.add_argument("--window-size=1920,1080")  # Optional: set window size for full rendering
-# chrome_options.add_argument("--no-sandbox")  # Optional: for Linux environments
-# chrome_options.add_argument("--disable-dev-shm-usage")  # Optional: prevents crashes on some systems
+chrome_options.add_argument("--no-sandbox")  # Optional: for Linux environments
+chrome_options.add_argument("--disable-dev-shm-usage")  # Optional: prevents crashes on some systems
 chrome_options.add_experimental_option("prefs", {
     "download.default_directory": download_dir,
     "download.prompt_for_download": False,
@@ -147,7 +146,7 @@ while True:
             log.warning("⚠️ File not downloaded. Retrying...")
 
     except Exception as e:
-        log.error(f"❌ Error occurred: {e}\nRetrying in 10 seconds...\n")
+        log.error(f"❌ Error Roccurred: {e}\nRetrying in 10 seconds...\n")
         try:
             driver.quit()
         except:
