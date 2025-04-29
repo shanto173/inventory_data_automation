@@ -29,7 +29,7 @@ jobs:
         run: echo "${{ secrets.GCREDS_JSON }}" > gcreds.json
 
       - name: Run script
-        run: python your_script.py
+        run: python downLoad_inventory_report.py
 
       - name: Clean up creds
         run: rm gcreds.json
