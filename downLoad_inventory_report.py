@@ -59,13 +59,12 @@ while True:  # Infinite loop until the file is downloaded
         driver.find_element(By.XPATH, "//button[contains(text(), 'Log in')]").click()
         time.sleep(2)
 
+        time.sleep(2)
         try:
-            log.info("Waiting for modal to disappear...")
             wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".modal-backdrop")))
-        except Exception as e:
-            log.warning(f"Modal did not disappear: {e}")
+        except:
+            pass
 
-        log.info("Switching company...")
         switcher_span = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR,
             "div.o_menu_systray div.o_switch_company_menu > button > span"
         )))
