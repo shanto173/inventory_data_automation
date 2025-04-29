@@ -16,6 +16,7 @@ from google.oauth2 import service_account
 import gspread
 from gspread_dataframe import set_with_dataframe
 from datetime import datetime
+import pytz
 
 # === Setup Logging ===
 # This sets up logging to the console (GitHub Actions will capture this)
@@ -155,10 +156,12 @@ try:
     worksheet = sheet.worksheet("Sheet4")
     worksheet.clear()
     set_with_dataframe(worksheet, df)
+    
+    local_tz = pytz.timezone('Asia/Dhaka')
 
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    worksheet.update("W2", [[f"{timestamp}"]])
-    log.info(f"✅ Data pasted & timestamp updated: {timestamp}")
+    local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
+    worksheet.update("W2", [[f"{local_time}"]])
+    log.info(f"✅ Data pasted & timestamp updated: {local_time}")
 
 except Exception as e:
     log.error(f"❌ Error while pasting to Google Sheets: {e}")
