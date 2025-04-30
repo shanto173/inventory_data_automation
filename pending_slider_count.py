@@ -198,7 +198,7 @@ try:
 
     # === ✅ Add timestamp to Y2 ===
     local_time1 = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    worksheet.update("C1", [[f"{local_time1}"]])
+    worksheet1.update("C1", [[f"{local_time1}"]])
     print(f"Timestamp written to C1: {local_time1}")
 
 except Exception as e:
