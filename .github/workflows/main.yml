@@ -40,7 +40,7 @@ jobs:
       - name: Run supbaseConnection
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python supbaseConnection.py
+        run: python sheet_3_copy_of_sheet_3_order_mgt.py
 
 
       - name: Run std stock script
