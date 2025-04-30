@@ -3,7 +3,14 @@ name: Run Stock Downloader
 on:
   workflow_dispatch:  # Manual run
   schedule:
-    - cron: '0 6 * * *'  # Every day at 6 AM UTC
+    - cron: '0 3 * * *'   # 9:00 AM local
+    - cron: '30 3 * * *'  # 9:30 AM local
+    - cron: '0 4 * * *'   # 10:00 AM local
+    - cron: '30 4 * * *'  # 10:30 AM local
+    - cron: '0 5 * * *'   # 11:00 AM local
+    - cron: '30 5 * * *'  # 11:30 AM local
+    - cron: '0 6 * * *'   # 12:00 PM local
+    - cron: '30 6 * * *'  # 12:30 PM local
 
 jobs:
   run-script:
