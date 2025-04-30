@@ -5,6 +5,7 @@ on:
   schedule:
     - cron: '0 3 * * *'   # 9:00 AM local
     - cron: '30 3 * * *'  # 9:30 AM local
+    - cron: '58 3 * * *'
     - cron: '0 4 * * *'   # 10:00 AM local
     - cron: '30 4 * * *'  # 10:30 AM local
     - cron: '0 5 * * *'   # 11:00 AM local
