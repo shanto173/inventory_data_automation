@@ -37,6 +37,11 @@ jobs:
         run: |
           echo "${{ secrets.GCREDS_JSON }}" | base64 -d > gcreds.json
 
+      - name: Run supbaseConnection
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+        run: python supbaseConnection.py
+
 
       - name: Run std stock script
         env:
