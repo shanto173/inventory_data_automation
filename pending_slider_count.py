@@ -186,15 +186,14 @@ try:
     print(f"Timestamp written to AC2: {local_time}")
     
     # USD paste
-    
-    sheet = client.open_by_key("1fLRxl5IMZ4AM95fa7JKPn78GcDV3P-eFNZd23xUhyXo")
-    worksheet = sheet.worksheet("Pending order details")
+    sheet1 = client.open_by_key("1fLRxl5IMZ4AM95fa7JKPn78GcDV3P-eFNZd23xUhyXo")
+    worksheet1 = sheet1.worksheet("Pending order details")
 
     # Clear old content (optional)
-    worksheet.batch_clear(['A2:AC'])
+    worksheet1.batch_clear(['A2:AC'])
 
     # Paste new data
-    set_with_dataframe(worksheet, df_pending_slider,row=2, col=1)
+    set_with_dataframe(worksheet1, df_pending_slider,row=2, col=1)
     print("Data pasted to Google Sheet (Pending order details).")
 
     # === ✅ Add timestamp to Y2 ===
