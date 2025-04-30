@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 logger = logging.getLogger()
 
 # Database connection string with SSL enabled
-DATABASE_URL = 'postgresql+psycopg2://postgres:shanto8616@db.flidrqugtnmhnqspqthb.supabase.co:5432/postgres?sslmode=require'
+DATABASE_URL = 'postgresql+psycopg2://postgres:shanto8616@db.flidrqugtnmhnqspqthb.supabase.co:5432/postgres?sslmode=disable'
 
 # Create engine
 logger.info("Setting up database connection...")
