@@ -18,7 +18,7 @@ from datetime import datetime  # 🔹 Import for timestamp
 from google.oauth2 import service_account
 import pytz
 import traceback
-from selenium.webdriver.common.keys import Keys  
+from selenium.webdriver.common.keys import Keys 
 
 # === Setup Logging ===
 # This sets up logging to the console (GitHub Actions will capture this)
@@ -42,7 +42,7 @@ chrome_options.add_experimental_option("prefs", {
     "safebrowsing.enabled": True
 })
 
-pattern = "Packing and Invoice Summery"
+pattern = "Released Summery"
 
 def is_file_downloaded():
     return any(Path(download_dir).glob(f"*{pattern}*.xlsx"))
@@ -89,7 +89,6 @@ while True:
         # step 4
         # === Trigger global search box by sending a keystroke ===
         log.info("=== Trigger global search box by sending a keystroke ===")
-        
         body = driver.find_element(By.TAG_NAME, "body")
         body.send_keys("MRP")  # or use Keys.A if needed
         time.sleep(2)  # Wait for search box to appear
@@ -102,25 +101,22 @@ while True:
 
         # Step 6
         # click on list of report
-        
         log.info("=== click on list of report ===")
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/main/div/div/div/div/div/div[1]/div[2]/div/select"))).click() 
         time.sleep(4)
         
         # Step 7
-        # click on Invoice summary of report
-        log.info("=== click on Invoice summary of report ===")
-        wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div[1]/div/div/div/main/div/div/div/div/div/div[1]/div[2]/div/select/option[19]"))).click() 
+        # click on Released Summary of report
+        log.info("=== click on Released Summary of report ===")
+        wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/main/div/div/div/div/div/div[1]/div[2]/div/select/option[20]"))).click() 
         time.sleep(4)
         
         # Step 8
         # download the report
         log.info("=== download the report ===")
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/footer/footer/button[1]"))).click() 
-        time.sleep(10)
+        time.sleep(4)
        
-        # === Step 9: Confirm file downloaded ===
-        
         # === Step 9: Confirm file downloaded ===
         if is_file_downloaded():
             log.info("✅ File download complete!")
@@ -158,10 +154,10 @@ try:
     print(f"Latest file found: {latest_file.name}")
 
     # Load into DataFrame
-    df_production_pcs = pd.read_excel(latest_file,sheet_name=0)
+    df_released_pcs = pd.read_excel(latest_file,sheet_name=0)
     print("File loaded into DataFrame.")
 
-    df_production_usd = pd.read_excel(latest_file,sheet_name=1)
+    df_released_usd = pd.read_excel(latest_file,sheet_name=1)
     print("File loaded into DataFrame.")
     
     # Setup Google Sheets API
@@ -174,13 +170,13 @@ try:
 
     # Open the sheet and paste the data
     sheet = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
-    worksheet = sheet.worksheet("Production Data")
+    worksheet = sheet.worksheet("Product release Data")
 
     # Clear old content (optional)
     worksheet.clear()
 
     # Paste new data
-    set_with_dataframe(worksheet, df_production_pcs)
+    set_with_dataframe(worksheet, df_released_pcs)
     print("Data pasted to Google Sheet (Sheet4).")
     
     # === ✅ Add timestamp to Y2 ===
@@ -192,13 +188,13 @@ try:
     # USD paste
     
     sheet = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
-    worksheet = sheet.worksheet("Production Data value")
+    worksheet = sheet.worksheet("Production relase value")
 
     # Clear old content (optional)
     worksheet.clear()
 
     # Paste new data
-    set_with_dataframe(worksheet, df_production_usd)
+    set_with_dataframe(worksheet, df_released_usd)
     print("Data pasted to Google Sheet (Sheet4).")
 
     # === ✅ Add timestamp to Y2 ===
@@ -208,3 +204,5 @@ try:
 
 except Exception as e:
     print(f"Error while pasting to Google Sheets: {e}")
+    
+
