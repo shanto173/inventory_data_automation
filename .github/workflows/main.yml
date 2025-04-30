@@ -3,6 +3,7 @@ name: Run Stock Downloader
 on:
   workflow_dispatch:  # Manual run
   schedule:
+    - cron: '0 2 * * *'  # 8:00 AM local
     - cron: '0 3 * * *'   # 9:00 AM local
     - cron: '30 3 * * *'  # 9:30 AM local
     - cron: '58 3 * * *'
@@ -38,7 +39,7 @@ jobs:
           echo "${{ secrets.GCREDS_JSON }}" | base64 -d > gcreds.json
 
           
-      - name: Run std stock script
+      - name: Run pending_slider_count script
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
         run: python pending_slider_count.py
