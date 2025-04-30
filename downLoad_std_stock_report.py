@@ -17,6 +17,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime  # 🔹 Import for timestamp
 from google.oauth2 import service_account
 import pytz
+import traceback
 
 # === Setup Logging ===
 # This sets up logging to the console (GitHub Actions will capture this)
@@ -28,7 +29,12 @@ download_dir = os.path.join(os.getcwd(), "download")
 os.makedirs(download_dir, exist_ok=True)
 
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")  # 🔹 Run Chrome in headless mode
+chrome_options.add_argument("--headless=new")  # Headless mode v113+
+chrome_options.add_argument("--window-size=1920,1080")
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
+# 🔹 Run Chrome in headless mode
 # Optional: prevents crashes on some systems
 chrome_options.add_experimental_option("prefs", {
     "download.default_directory": download_dir,
@@ -59,22 +65,30 @@ while True:
         time.sleep(2)
 
         # === Step 2: Click user/company switch ===
-        try:
-            log.info("Waiting for modal to disappear...")
-            wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".modal-backdrop")))
-        except Exception as e:
-            log.warning(f"Modal did not disappear: {e}")
-            
-        
-        log.info("Switching company...")
-        switcher_span = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR,
-            "div.o_menu_systray div.o_switch_company_menu > button > span"
-        )))
-        driver.execute_script("arguments[0].scrollIntoView(true);", switcher_span)
-        switcher_span.click()
         time.sleep(2)
 
-        # === Step 3: Click 'Zipper' company ===
+        time.sleep(2)
+        try:
+            wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".modal-backdrop")))
+        except:
+            pass
+        
+        # Wait for presence first
+        switcher_span = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
+            "div.o_menu_systray div.o_switch_company_menu > button > span"
+        )))
+
+        # Scroll into view (in case it's outside viewport in headless)
+        driver.execute_script("arguments[0].scrollIntoView(true);", switcher_span)
+
+        # Add a small delay
+        time.sleep(1)
+
+        # Now wait until it’s clickable
+        wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR,
+            "div.o_menu_systray div.o_switch_company_menu > button > span"
+        ))).click()
+
         log.info("Selecting 'Zipper' company...")
         target_div = wait.until(EC.element_to_be_clickable((By.XPATH,
             "//div[contains(@class, 'log_into')][span[contains(text(), 'Zipper')]]"
@@ -98,13 +112,11 @@ while True:
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[2]/div/div[2]/button"))).click()
         time.sleep(5)
 
+        # Clicking RM option
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[2]/div/div[2]/div/div[3]/span[10]/span"))).click()
         time.sleep(5)
 
-        wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[3]/div[2]/button"))).click()
-        time.sleep(5)
-
-        wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[3]/div[2]/div/span[2]"))).click()
+        wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[3]/nav/button[2]"))).click()
         time.sleep(5)
 
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/table/thead/tr/th[1]/div/input"))).click()
@@ -141,9 +153,12 @@ while True:
             break  # Exit the loop after file download is complete
         else:
             log.warning("⚠️ File not downloaded. Retrying...")
+            
+        
 
     except Exception as e:
-        log.error(f"❌ Error Roccurred: {e}\nRetrying in 10 seconds...\n")
+        driver.save_screenshot("error_screenshot.png")
+        log.error(f"❌ Error Roccurred: {traceback.format_exc()}\nRetrying in 10 seconds...\n")
         try:
             driver.quit()
         except:
