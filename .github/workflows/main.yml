@@ -49,7 +49,15 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
         run: python downLoad_inventory_report.py
 
+      - name: Run inventory script
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+        run: python downLoad_Invoice_summary.py
 
+      - name: Run inventory script
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+        run: python downLoad_order_relased.py
 
       - name: Clean up creds
         run: rm gcreds.json
