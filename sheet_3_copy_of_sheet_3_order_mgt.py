@@ -50,6 +50,25 @@ def clean_column_name(col_name):
 df_1 = load_data(csv_url_1)
 print("Data from Sheet 1 (first 5 rows):")
 print(df_1.head())
+df_1['ReleaseDate'] = pd.to_datetime(df_1['ReleaseDate'], errors='coerce')
+
+# Get today's date and first day of this month
+today = pd.Timestamp.today().normalize()
+start_of_month = today.replace(day=1)
+
+# Filter MTD: from 1st of this month to today
+df_mtd = df_1[(df_1['ReleaseDate'] >= start_of_month) & (df_1['ReleaseDate'] <= today)]
+
+if df_mtd.empty:
+    # No current-month data found → fallback to previous month
+    last_day_prev_month = start_of_month - pd.Timedelta(days=1)
+    start_prev_month = last_day_prev_month.replace(day=1)
+
+    df_mtd = df_1[
+        (df_1['ReleaseDate'] >= start_prev_month) &
+        (df_1['ReleaseDate'] <= last_day_prev_month)
+    ]
+
 
 # --- Insert into Supabase PostgreSQL ---
 def insert_data_to_supabase(df, table_name):
@@ -86,8 +105,8 @@ def insert_data_to_supabase(df, table_name):
     except Exception as e:
         print(f"❌ Error inserting to Supabase: {e}")
 
-if df_1 is not None:
-    insert_data_to_supabase(df_1, 'order_relased')
+if df_mtd is not None:
+    insert_data_to_supabase(df_mtd, 'order_relased')
 
 # --- Fetch from Supabase ---
 def fetch_from_supabase(query):
