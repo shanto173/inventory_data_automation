@@ -119,6 +119,35 @@ def fetch_from_supabase(query):
         print(f"❌ Fetch error: {e}")
         return None
 
+
+alter_table_Enable = fetch_from_supabase(""" ALTER TABLE public.order_relased ENABLE ROW LEVEL SECURITY;""")
+
+alter_table_rls = fetch_from_supabase("""
+CREATE POLICY "Allow read access to all"
+ON public.order_relased
+FOR SELECT
+USING (true);
+
+-- Allow all INSERTs
+CREATE POLICY "Allow insert access to all"
+ON public.order_relased
+FOR INSERT
+WITH CHECK (true);
+
+-- Allow all UPDATEs
+CREATE POLICY "Allow update access to all"
+ON public.order_relased
+FOR UPDATE
+USING (true);
+
+-- Allow all DELETEs (optional)
+CREATE POLICY "Allow delete access to all"
+ON public.order_relased
+FOR DELETE
+USING (true);
+""")
+
+
 Sheet_3_order_MGT = fetch_from_supabase("""
     SELECT "OA", "Product", "Category", "Slider", SUM("QuantityPCS") AS "QuantityPCS", "ReleaseDate"
     FROM "order_relased"
