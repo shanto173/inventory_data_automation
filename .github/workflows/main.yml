@@ -1,18 +1,97 @@
+# name: Run Stock Downloader
+
+# on:
+#   workflow_dispatch:  # Manual run
+#   schedule:
+#     - cron: '0 2 * * *'  # 8:00 AM local
+#     - cron: '0 3 * * *'   # 9:00 AM local
+#     - cron: '30 3 * * *'  # 9:30 AM local
+#     - cron: '58 3 * * *'
+#     - cron: '0 4 * * *'   # 10:00 AM local
+#     - cron: '30 4 * * *'  # 10:30 AM local
+#     - cron: '0 5 * * *'   # 11:00 AM local
+#     - cron: '30 5 * * *'  # 11:30 AM local
+#     - cron: '0 6 * * *'   # 12:00 PM local
+#     - cron: '30 6 * * *'  # 12:30 PM local
+
+# jobs:
+#   run-script:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repo
+#         uses: actions/checkout@v3
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: '3.10'
+
+#       - name: Install dependencies
+#         run: |
+#           pip install selenium pandas gspread oauth2client gspread-dataframe webdriver-manager openpyxl pytz psycopg2 sqlalchemy
+
+#       - name: Setup Chrome
+#         uses: browser-actions/setup-chrome@latest
+
+#       - name: Create creds file
+#         run: |
+#           echo "${{ secrets.GCREDS_JSON }}" | base64 -d > gcreds.json
+
+          
+#       - name: Run pending_slider_count script
+#         env:
+#           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+#         run: python pending_slider_count.py
+
+
+#       - name: Run std stock script
+#         env:
+#           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+#         run: python downLoad_std_stock_report.py
+        
+
+#       - name: Run inventory script
+#         env:
+#           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+#         run: python downLoad_inventory_report.py
+
+#       - name: Run Invoice_summary
+#         env:
+#           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+#         run: python downLoad_Invoice_summary.py
+
+#       - name: Run order_relased
+#         env:
+#           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+#         run: python downLoad_order_relased.py
+
+#       - name: Run supbaseConnection
+#         env:
+#           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+#         run: python sheet_3_copy_of_sheet_3_order_mgt.py
+
+#       - name: Clean up creds
+#         run: rm gcreds.json
+
+
+
+
 name: Run Stock Downloader
 
 on:
   workflow_dispatch:  # Manual run
   schedule:
-    - cron: '0 2 * * *'  # 8:00 AM local
-    - cron: '0 3 * * *'   # 9:00 AM local
-    - cron: '30 3 * * *'  # 9:30 AM local
-    - cron: '58 3 * * *'
-    - cron: '0 4 * * *'   # 10:00 AM local
-    - cron: '30 4 * * *'  # 10:30 AM local
-    - cron: '0 5 * * *'   # 11:00 AM local
-    - cron: '30 5 * * *'  # 11:30 AM local
-    - cron: '0 6 * * *'   # 12:00 PM local
-    - cron: '30 6 * * *'  # 12:30 PM local
+    - cron: '0 2 * * *'   # 8:00 AM BD
+    - cron: '0 3 * * *'   # 9:00 AM BD
+    - cron: '30 3 * * *'  # 9:30 AM BD
+    - cron: '58 3 * * *'  # 9:58 AM BD
+    - cron: '0 4 * * *'   # 10:00 AM BD
+    - cron: '30 4 * * *'  # 10:30 AM BD
+    - cron: '0 5 * * *'   # 11:00 AM BD
+    - cron: '30 5 * * *'  # 11:30 AM BD
+    - cron: '0 6 * * *'   # 12:00 PM BD
+    - cron: '30 6 * * *'  # 12:30 PM BD
 
 jobs:
   run-script:
@@ -38,18 +117,15 @@ jobs:
         run: |
           echo "${{ secrets.GCREDS_JSON }}" | base64 -d > gcreds.json
 
-          
       - name: Run pending_slider_count script
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
         run: python pending_slider_count.py
 
-
       - name: Run std stock script
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
         run: python downLoad_std_stock_report.py
-        
 
       - name: Run inventory script
         env:
@@ -66,10 +142,20 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
         run: python downLoad_order_relased.py
 
-      - name: Run supbaseConnection
+      - name: Run supabaseConnection only between 9–10 AM BD time (UTC+6)
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python sheet_3_copy_of_sheet_3_order_mgt.py
+        run: |
+          HOUR=$(date -u +"%H")
+          BD_HOUR=$(( (HOUR + 6) % 24 ))
+          echo "Current BD Hour: $BD_HOUR"
+          if [ $BD_HOUR -ge 9 ] && [ $BD_HOUR -lt 10 ]; then
+            echo "Running script within 9–10 AM BD time"
+            python sheet_3_copy_of_sheet_3_order_mgt.py
+          else
+            echo "Skipped: Not within 9–10 AM BD time"
+          fi
 
       - name: Clean up creds
         run: rm gcreds.json
+
