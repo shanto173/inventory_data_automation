@@ -173,10 +173,10 @@ try:
     worksheet = sheet.worksheet("Pending order details")
 
     # Clear old content (optional)
-    worksheet.batch_clear(['A:AC'])
+    worksheet.batch_clear(['A2:AC'])
 
     # Paste new data
-    set_with_dataframe(worksheet, df_pending_slider)
+    set_with_dataframe(worksheet, df_pending_slider,row=2, col=1)
     print("Data pasted to Google Sheet (Pending order details).")
     
     # === ✅ Add timestamp to Y2 ===
