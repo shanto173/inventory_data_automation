@@ -182,8 +182,8 @@ try:
     # === ✅ Add timestamp to Y2 ===
     local_tz = pytz.timezone('Asia/Dhaka')
     local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    worksheet.update("AK2", [[f"{local_time}"]])
-    print(f"Timestamp written to AC2: {local_time}")
+    worksheet.update("AQ2", [[f"{local_time}"]])
+    print(f"Timestamp written to AQ2: {local_time}")
     
     # USD paste
     sheet1 = client.open_by_key("1fLRxl5IMZ4AM95fa7JKPn78GcDV3P-eFNZd23xUhyXo")
