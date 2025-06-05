@@ -146,6 +146,16 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
         run: python downLoad_inventory_report.py
 
+      - name: Run downLoad_zip_Ageing
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+        run: python downLoad_zip_Ageing.py
+
+      - name: Run downLoad_MT_Ageing
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+        run: python downLoad_MT_Ageing.py
+
       - name: Run Invoice_summary
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
