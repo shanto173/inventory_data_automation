@@ -90,7 +90,7 @@ while True:
         # === Trigger global search box by sending a keystroke ===
         log.info("=== Trigger global search box by sending a keystroke ===")
         body = driver.find_element(By.TAG_NAME, "body")
-        body.send_keys("MRP")  # or use Keys.A if needed
+        body.send_keys("MRP Reports")  # or use Keys.A if needed
         time.sleep(2)  # Wait for search box to appear
         
         # Step 5
