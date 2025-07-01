@@ -121,6 +121,11 @@ jobs:
         run: |
           echo "${{ secrets.GCREDS_JSON }}" | base64 -d > gcreds.json
 
+      - name: Run MT_pending_slider_count
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+        run: python MT_pending_slider_count.py
+
       - name: Run downLoad_MT_std_stock_report
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
