@@ -186,7 +186,7 @@ try:
     print(f"Timestamp written to C1: {local_time}")
     
     # USD paste
-    sheet1 = client.open_by_key("1fLRxl5IMZ4AM95fa7JKPn78GcDV3P-eFNZd23xUhyXo")
+    sheet1 = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
     worksheet1 = sheet1.worksheet("Zip Pending order")
 
     # Clear old content (optional)
