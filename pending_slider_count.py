@@ -170,7 +170,7 @@ try:
 
     # Open the sheet and paste the data
     sheet = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
-    worksheet = sheet.worksheet("Pending order details")
+    worksheet = sheet.worksheet("Zip_Pending_order")
 
     # Clear old content (optional)
     worksheet.batch_clear(['A2:AD'])
@@ -190,7 +190,7 @@ try:
     
     # USD paste
     sheet1 = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
-    worksheet1 = sheet1.worksheet("Zip Pending order")
+    worksheet1 = sheet1.worksheet("Zip_Pending_order")
 
     # Clear old content (optional)
     worksheet1.batch_clear(['A2:AD'])
