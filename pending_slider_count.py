@@ -176,8 +176,11 @@ try:
     worksheet.batch_clear(['A2:AD'])
 
     # Paste new data
-    set_with_dataframe(worksheet, df_pending_slider,row=2, col=1)
-    print("Data pasted to Google Sheet (Pending order details).")
+    try:
+        set_with_dataframe(worksheet, df_pending_slider, row=2, col=1)
+        print("✅ Data successfully pasted.")
+    except Exception as e:
+        print("❌ Failed to paste data:", e)
     
     # === ✅ Add timestamp to Y2 ===
     local_tz = pytz.timezone('Asia/Dhaka')
