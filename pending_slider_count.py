@@ -173,7 +173,7 @@ try:
     worksheet = sheet.worksheet("Pending order details")
 
     # Clear old content (optional)
-    worksheet.batch_clear(['A2:AC'])
+    worksheet.batch_clear(['A2:AD'])
 
     # Paste new data
     set_with_dataframe(worksheet, df_pending_slider,row=2, col=1)
@@ -182,15 +182,15 @@ try:
     # === ✅ Add timestamp to Y2 ===
     local_tz = pytz.timezone('Asia/Dhaka')
     local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    worksheet.update("AQ2", [[f"{local_time}"]])
-    print(f"Timestamp written to AQ2: {local_time}")
+    worksheet.update("C1", [[f"{local_time}"]])
+    print(f"Timestamp written to C1: {local_time}")
     
     # USD paste
     sheet1 = client.open_by_key("1fLRxl5IMZ4AM95fa7JKPn78GcDV3P-eFNZd23xUhyXo")
     worksheet1 = sheet1.worksheet("Zip Pending order")
 
     # Clear old content (optional)
-    worksheet1.batch_clear(['A2:AC'])
+    worksheet1.batch_clear(['A2:AD'])
 
     # Paste new data
     set_with_dataframe(worksheet1, df_pending_slider,row=2, col=1)

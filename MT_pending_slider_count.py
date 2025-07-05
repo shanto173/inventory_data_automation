@@ -173,7 +173,7 @@ try:
     worksheet = sheet.worksheet("MT_Pending_order")
 
     # Clear old content (optional)
-    worksheet.batch_clear(['A2:AC'])
+    worksheet.batch_clear(['A2:AD'])
 
     # Paste new data
     set_with_dataframe(worksheet, df_pending_slider,row=2, col=1)
@@ -190,7 +190,7 @@ try:
     worksheet1 = sheet1.worksheet("MT_Pending_order")
 
     # Clear old content (optional)
-    worksheet1.batch_clear(['A2:AC'])
+    worksheet1.batch_clear(['A2:AD'])
 
     # Paste new data
     set_with_dataframe(worksheet1, df_pending_slider,row=2, col=1)
