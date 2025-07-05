@@ -187,7 +187,7 @@ try:
     
     # USD paste
     sheet1 = client.open_by_key("1fLRxl5IMZ4AM95fa7JKPn78GcDV3P-eFNZd23xUhyXo")
-    worksheet1 = sheet1.worksheet("Pending order details")
+    worksheet1 = sheet1.worksheet("Zip Pending order")
 
     # Clear old content (optional)
     worksheet1.batch_clear(['A2:AC'])
