@@ -172,14 +172,16 @@ try:
     sheet = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
     worksheet = sheet.worksheet("Zip_Pending_order")
 
-    # Clear old content (optional)
-    worksheet.batch_clear(['A2:AD'])
+    
 
     # Paste new data
     
     if df_pending_slider.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
+        # Clear old content (optional)
+        worksheet.batch_clear(['A2:AD'])
+        time.sleep(4)
         set_with_dataframe(worksheet, df_pending_slider,row=2, col=1)
         print("Data pasted to Google Sheet (Pending order details).")
         # === ✅ Add timestamp to Y2 ===

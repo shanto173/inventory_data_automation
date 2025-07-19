@@ -201,12 +201,14 @@ try:
     worksheet_prod_val = sheet_prod_val.worksheet("Production Data value")
 
     # Clear old content (optional)
-    worksheet_prod_val.clear()
+
     time.sleep(3)
     # Paste new data
     if df_production_usd.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
+        worksheet_prod_val.clear()
+        time.sleep(4)
         set_with_dataframe(worksheet_prod_val, df_production_usd)
         print("Data pasted to Google Sheet (Sheet4).")
         # === ✅ Add timestamp to Y2 ===

@@ -152,11 +152,13 @@ try:
     worksheet_pcs = sheet_pcs.worksheet("MT_Order_Rel_QTY")
 
     # Clear old content (optional)
-    worksheet_pcs.clear()
+    
 
     if df_released_pcs.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
+        worksheet_pcs.clear()
+        time.sleep(4)
         # Paste new data
         set_with_dataframe(worksheet_pcs, df_released_pcs)
         print("Data pasted to Google Sheet (Sheet4).")
@@ -172,11 +174,13 @@ try:
     worksheet_usd = sheet_usd.worksheet("MT_Order_Rel_Value")
 
     # Clear old content (optional)
-    worksheet_usd.clear()
+    
 
     if df_released_usd.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
+        worksheet_usd.clear()
+        time.sleep(4)
         # Paste new data
         set_with_dataframe(worksheet_usd, df_released_usd)
         print("Data pasted to Google Sheet (Sheet4).")

@@ -154,10 +154,12 @@ try:
 
     sheet_MT_inv = client.open_by_key("1kD4iCUqEAQsE_CLuv3dFSFNSjD2Hj2dTrE40deGZaK0")
     worksheet_MT_inv = sheet_MT_inv.worksheet("Stock_data")
-    worksheet_MT_inv.clear()
+    
     if df.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
+        worksheet_MT_inv.clear()
+        time.sleep(4)
         set_with_dataframe(worksheet_MT_inv, df)
         local_tz = pytz.timezone('Asia/Dhaka')
         local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")

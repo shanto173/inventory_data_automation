@@ -157,12 +157,14 @@ try:
     worksheet_pcs = sheet_pcs.worksheet("MT_Production_QTY")
 
     # Clear old content (optional)
-    worksheet_pcs.clear()
+    
 
     # Paste new data
     if df_production_pcs.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
+        worksheet_pcs.clear()
+        time.sleep(3)
         set_with_dataframe(worksheet_pcs, df_production_pcs)
         print("Data pasted to Google Sheet (Sheet4).")
         # === ✅ Add timestamp to Y2 ===
@@ -177,16 +179,17 @@ try:
     worksheet_val = sheet_val.worksheet("MT_Production_Value")
 
     # Clear old content (optional)
-    worksheet_val.clear()
+    
 
     # Paste new data
     
     if df_production_usd.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
+        worksheet_val.clear()
+        time.sleep(3)
         set_with_dataframe(worksheet_val, df_production_usd)
         print("Data pasted to Google Sheet (Sheet4).")
-
         # === ✅ Add timestamp to Y2 ===
         local_time1 = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
         worksheet_val.update("AC2", [[f"{local_time1}"]])

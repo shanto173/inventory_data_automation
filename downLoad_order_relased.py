@@ -172,13 +172,15 @@ try:
     sheet_pcs = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
     worksheet_pcs = sheet_pcs.worksheet("Product release Data")
 
-    # Clear old content (optional)
-    worksheet_pcs.clear()
+    
 
     if df_released_pcs.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
         # Paste new data
+        # Clear old content (optional)
+        worksheet_pcs.clear()
+        time.sleep(4)
         set_with_dataframe(worksheet_pcs, df_released_pcs)
         print("Data pasted to Google Sheet (Sheet4).")
         # === ✅ Add timestamp to Y2 ===
@@ -193,13 +195,15 @@ try:
     sheet_usd = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
     worksheet_usd = sheet_usd.worksheet("Production relase value")
 
-    # Clear old content (optional)
-    worksheet_usd.clear()
+    
 
     if df_released_usd.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
         # Paste new data
+        # Clear old content (optional)
+        worksheet_usd.clear()
+        time.sleep(4)
         set_with_dataframe(worksheet_usd, df_released_usd)
         print("Data pasted to Google Sheet (Sheet4).")
         # === ✅ Add timestamp to Y2 ===

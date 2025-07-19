@@ -154,10 +154,12 @@ try:
 
     sheet = client.open_by_key("1z6Zb_BronrO26rNS_gCKmsetoY7_OFysfIyvU3iazy0")
     worksheet = sheet.worksheet("Sheet4")
-    worksheet.clear()
+
     if df.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
+        worksheet.clear()
+        time.sleep(4)
         set_with_dataframe(worksheet, df)
         print("Data pasted to Google Sheet (Sheet4).")
         local_tz = pytz.timezone('Asia/Dhaka')

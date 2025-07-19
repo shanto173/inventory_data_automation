@@ -197,13 +197,15 @@ try:
     sheet = client.open_by_key("1kD4iCUqEAQsE_CLuv3dFSFNSjD2Hj2dTrE40deGZaK0")
     worksheet = sheet.worksheet("odoo_data")
 
-    # Clear old content (optional)
-    worksheet.clear()
+
 
     # ✅ Paste new data
     if df.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
+        # Clear old content (optional)
+        worksheet.clear()
+        time.sleep(4)
         set_with_dataframe(worksheet, df)
         print("Data pasted to Google Sheet (Sheet4).")
         # ✅ Add column name 'Date' in G1
