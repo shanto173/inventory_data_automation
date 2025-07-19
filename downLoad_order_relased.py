@@ -115,7 +115,7 @@ while True:
         # download the report
         log.info("=== download the report ===")
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/footer/footer/button[1]"))).click() 
-        time.sleep(4)
+        time.sleep(30)
        
         # === Step 9: Confirm file downloaded ===
         if is_file_downloaded():
@@ -169,39 +169,44 @@ try:
     client = gspread.authorize(creds)
 
     # Open the sheet and paste the data
-    sheet = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
-    worksheet = sheet.worksheet("Product release Data")
+    sheet_pcs = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
+    worksheet_pcs = sheet_pcs.worksheet("Product release Data")
 
     # Clear old content (optional)
-    worksheet.clear()
+    worksheet_pcs.clear()
 
-    # Paste new data
-    set_with_dataframe(worksheet, df_released_pcs)
-    print("Data pasted to Google Sheet (Sheet4).")
-    
-    # === ✅ Add timestamp to Y2 ===
-    local_tz = pytz.timezone('Asia/Dhaka')
-    local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    worksheet.update("AC2", [[f"{local_time}"]])
-    print(f"Timestamp written to AC2: {local_time}")
-    
+    if df_released_pcs.empty:
+        print("Skip: DataFrame is empty, not pasting to sheet.")
+    else:
+        # Paste new data
+        set_with_dataframe(worksheet_pcs, df_released_pcs)
+        print("Data pasted to Google Sheet (Sheet4).")
+        # === ✅ Add timestamp to Y2 ===
+        local_tz = pytz.timezone('Asia/Dhaka')
+        local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
+        worksheet_pcs.update("AC2", [[f"{local_time}"]])
+        print(f"Timestamp written to AC2: {local_time}")
+        
+
     # USD paste
     
-    sheet = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
-    worksheet = sheet.worksheet("Production relase value")
+    sheet_usd = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
+    worksheet_usd = sheet_usd.worksheet("Production relase value")
 
     # Clear old content (optional)
-    worksheet.clear()
+    worksheet_usd.clear()
 
-    # Paste new data
-    set_with_dataframe(worksheet, df_released_usd)
-    print("Data pasted to Google Sheet (Sheet4).")
-
-    # === ✅ Add timestamp to Y2 ===
-    local_time1 = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    worksheet.update("AC2", [[f"{local_time1}"]])
-    print(f"Timestamp written to AC2: {local_time1}")
-
+    if df_released_usd.empty:
+        print("Skip: DataFrame is empty, not pasting to sheet.")
+    else:
+        # Paste new data
+        set_with_dataframe(worksheet_usd, df_released_usd)
+        print("Data pasted to Google Sheet (Sheet4).")
+        # === ✅ Add timestamp to Y2 ===
+        local_time1 = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
+        worksheet_usd.update("AC2", [[f"{local_time1}"]])
+        print(f"Timestamp written to AC2: {local_time1}")
+        
 except Exception as e:
     print(f"Error while pasting to Google Sheets: {e}")
     

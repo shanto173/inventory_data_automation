@@ -117,7 +117,7 @@ while True:
         # download the report
         log.info("=== download the report ===")
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/footer/footer/button[1]/span"))).click() 
-        time.sleep(20)
+        time.sleep(30)
        
         # === Step 9: Confirm file downloaded ===
         
@@ -176,33 +176,18 @@ try:
     worksheet.batch_clear(['A2:AD'])
 
     # Paste new data
-    try:
-        set_with_dataframe(worksheet, df_pending_slider, row=2, col=1)
-        print("✅ Data successfully pasted.")
-    except Exception as e:
-        print("❌ Failed to paste data:", e)
     
-    # === ✅ Add timestamp to Y2 ===
-    local_tz = pytz.timezone('Asia/Dhaka')
-    local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    worksheet.update("C1", [[f"{local_time}"]])
-    print(f"Timestamp written to C1: {local_time}")
-    
-    # USD paste
-    sheet1 = client.open_by_key("1acV7UrmC8ogC54byMrKRTaD9i1b1Cf9QZ-H1qHU5ZZc")
-    worksheet1 = sheet1.worksheet("Zip_Pending_order")
-
-    # Clear old content (optional)
-    worksheet1.batch_clear(['A2:AD'])
-
-    # Paste new data
-    set_with_dataframe(worksheet1, df_pending_slider,row=2, col=1)
-    print("Data pasted to Google Sheet (Pending order details).")
-
-    # === ✅ Add timestamp to Y2 ===
-    local_time1 = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    worksheet1.update("C1", [[f"{local_time1}"]])
-    print(f"Timestamp written to C1: {local_time1}")
+    if df_pending_slider.empty:
+        print("Skip: DataFrame is empty, not pasting to sheet.")
+    else:
+        set_with_dataframe(worksheet, df_pending_slider,row=2, col=1)
+        print("Data pasted to Google Sheet (Pending order details).")
+        # === ✅ Add timestamp to Y2 ===
+        # === ✅ Add timestamp to Y2 ===
+        local_tz = pytz.timezone('Asia/Dhaka')
+        local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
+        worksheet.update("C1", [[f"{local_time}"]])
+        print(f"Timestamp written to C1: {local_time}")
 
 except Exception as e:
     print(f"Error while pasting to Google Sheets: {e}")

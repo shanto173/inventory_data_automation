@@ -109,7 +109,7 @@ while True:  # Infinite loop until the file is downloaded
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/main/div/div[2]/div[3]/div/select/option[3]"))).click()
         time.sleep(5)
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/footer/button[1]"))).click()
-        time.sleep(7)
+        time.sleep(20)
 
         if is_file_downloaded():
             log.info("✅ File download complete!")
@@ -141,6 +141,7 @@ try:
     files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
     latest_file = files[0]
     df = pd.read_excel(latest_file)
+    time.sleep(4)
     log.info("✅ File loaded into DataFrame.")
 
     # Use credentials stored in gcreds.json (created in GitHub Action)
@@ -156,13 +157,18 @@ try:
     sheet = client.open_by_key("1z6Zb_BronrO26rNS_gCKmsetoY7_OFysfIyvU3iazy0")
     worksheet = sheet.worksheet("age_MT")
     worksheet.clear()
-    set_with_dataframe(worksheet, df)
     
-    local_tz = pytz.timezone('Asia/Dhaka')
-
-    local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    worksheet.update("W2", [[f"{local_time}"]])
-    log.info(f"✅ Data pasted & timestamp updated: {local_time}")
+    if df.empty:
+        print("Skip: DataFrame is empty, not pasting to sheet.")
+    else:
+        set_with_dataframe(worksheet, df)
+        print("Data pasted to Google Sheet (Sheet4).")
+        local_tz = pytz.timezone('Asia/Dhaka')
+        local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
+        worksheet.update("W2", [[f"{local_time}"]])
+        log.info(f"✅ Data pasted & timestamp updated: {local_time}")
+    
+    
 
 except Exception as e:
     log.error(f"❌ Error while pasting to Google Sheets: {e}")

@@ -139,7 +139,7 @@ while True:
 
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/footer/button[1]"))).click()
 
-        time.sleep(10)
+        time.sleep(30)
 
         # === Step 9: Confirm file downloaded ===
         if is_file_downloaded():
@@ -179,6 +179,7 @@ try:
 
     # Load into DataFrame
     df = pd.read_excel(latest_file)
+    time.sleep(5)
     print("File loaded into DataFrame.")
 
     # Setup Google Sheets API
@@ -200,19 +201,19 @@ try:
     worksheet.clear()
 
     # ✅ Paste new data
-    set_with_dataframe(worksheet, df)
-    print("Data pasted to Google Sheet (odoo_data).")
-    
-    # ✅ Add column name 'Date' in G1
-    worksheet.update('G1', [['Date']])
-    print('Column header "Date" written to G1.')
-
-    local_tz = pytz.timezone('Asia/Dhaka')
-    
-    # ✅ Add current timestamp to G2
-    local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    worksheet.update('G2', [[f"{local_time}"]])
-    print(f"Timestamp written to G2: {local_time}")
-
+    if df.empty:
+        print("Skip: DataFrame is empty, not pasting to sheet.")
+    else:
+        set_with_dataframe(worksheet, df)
+        print("Data pasted to Google Sheet (Sheet4).")
+        # ✅ Add column name 'Date' in G1
+        worksheet.update('G1', [['Date']])
+        print('Column header "Date" written to G1.')
+        local_tz = pytz.timezone('Asia/Dhaka')
+        # ✅ Add current timestamp to G2
+        local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
+        worksheet.update('G2', [[f"{local_time}"]])
+        print(f"Timestamp written to G2: {local_time}")
+        
 except Exception as e:
     print(f"❌ Error while pasting to Google Sheets: {e}")

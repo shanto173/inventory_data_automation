@@ -109,7 +109,7 @@ while True:  # Infinite loop until the file is downloaded
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/main/div/div[2]/div[3]/div/select/option[3]"))).click()
         time.sleep(5)
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/footer/button[1]"))).click()
-        time.sleep(7)
+        time.sleep(30)
 
         if is_file_downloaded():
             log.info("✅ File download complete!")
@@ -156,13 +156,18 @@ try:
     sheet = client.open_by_key("1z6Zb_BronrO26rNS_gCKmsetoY7_OFysfIyvU3iazy0")
     worksheet = sheet.worksheet("age_ZIP")
     worksheet.clear()
-    set_with_dataframe(worksheet, df)
     
-    local_tz = pytz.timezone('Asia/Dhaka')
+    if df.empty:
+        print("Skip: DataFrame is empty, not pasting to sheet.")
+    else:
+        # Paste new data
+        set_with_dataframe(worksheet, df)
+        local_tz = pytz.timezone('Asia/Dhaka')
 
-    local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-    worksheet.update("W2", [[f"{local_time}"]])
-    log.info(f"✅ Data pasted & timestamp updated: {local_time}")
+        local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
+        worksheet.update("W2", [[f"{local_time}"]])
+        log.info(f"✅ Data pasted & timestamp updated: {local_time}")
 
+    
 except Exception as e:
     log.error(f"❌ Error while pasting to Google Sheets: {e}")
