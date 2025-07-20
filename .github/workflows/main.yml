@@ -117,6 +117,22 @@ jobs:
         run: |
           echo "${{ secrets.GCREDS_JSON }}" | base64 -d > gcreds.json
 
+      
+      - name: Run Consumption script
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+        run: python downLoad_inventory_report_consumption.py
+      
+      - name: Run std stock script
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+        run: python downLoad_std_stock_report.py
+
+      - name: Run inventory script
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+        run: python downLoad_inventory_report.py
+
       - name: Run MT_pending_slider_count
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
@@ -136,16 +152,6 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
         run: python pending_slider_count.py
-
-      - name: Run std stock script
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_std_stock_report.py
-
-      - name: Run inventory script
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_inventory_report.py
 
       - name: Run downLoad_zip_Ageing
         env:
