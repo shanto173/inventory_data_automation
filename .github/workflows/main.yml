@@ -118,6 +118,11 @@ jobs:
           echo "${{ secrets.GCREDS_JSON }}" | base64 -d > gcreds.json
 
       
+      - name: Run MT_Consumption script
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+        run: python MT_downLoad_inventory_report_consumption.py
+
       - name: Run Consumption script
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
