@@ -17,6 +17,7 @@ import gspread
 from gspread_dataframe import set_with_dataframe
 from datetime import datetime
 import pytz
+from selenium.webdriver.support.expected_conditions import url_changes
 
 # === Setup Logging ===
 # This sets up logging to the console (GitHub Actions will capture this)
@@ -28,11 +29,11 @@ download_dir = os.path.join(os.getcwd(), "download")
 os.makedirs(download_dir, exist_ok=True)
 
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")  # Comment this line for debug
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--window-size=1920,1080")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
+# chrome_options.add_argument("--headless")  # Comment this line for debug
+# chrome_options.add_argument("--disable-gpu")
+# chrome_options.add_argument("--window-size=1920,1080")
+# chrome_options.add_argument("--no-sandbox")
+# chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_experimental_option("prefs", {
     "download.default_directory": download_dir,
     "download.prompt_for_download": False,
@@ -78,7 +79,7 @@ while True:  # Infinite loop until the file is downloaded
         )))
         driver.execute_script("arguments[0].scrollIntoView(true);", target_div)
         target_div.click()
-        time.sleep(4)
+        time.sleep(2)
 
         driver.get("https://taps.odoo.com/web#action=441&model=stock.picking.type&view_type=kanban&cids=1&menu_id=280")
         wait.until(EC.presence_of_element_located((By.XPATH, "//html")))
@@ -89,19 +90,23 @@ while True:  # Infinite loop until the file is downloaded
         time.sleep(5)
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/header/nav/div[1]/div[3]/div/a[2]"))).click()
         time.sleep(5)
-        first_day_of_month = datetime.today().replace(day=1).strftime("%d/%m/%Y")
+        custom_date = datetime.strptime("01-Apr-2024", "%d-%b-%Y")
+        # Get the first day of that month
+        first_day_of_month = custom_date.replace(day=1).strftime("%d/%m/%Y")
+        old_url = driver.current_url
         wait.until(EC.presence_of_element_located((By.XPATH, "//*[@id='from_date_0']"))).send_keys(first_day_of_month)
         time.sleep(5)
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/footer/footer/button[1]"))).click()
-        time.sleep(30)
+        # WebDriverWait(driver, 10).until(url_changes(old_url))
+        time.sleep(60)
 
         log.info("Confirming file export...")
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div[3]/button"))).click()
         time.sleep(5)
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[2]/div/table/thead/tr/th[1]/div"))).click()
-        time.sleep(5)
+        time.sleep(3)
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[2]/div/div[1]/span/a[1]"))).click()
-        time.sleep(5)
+        time.sleep(3)
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[2]/div/div[2]/div/button"))).click()
         time.sleep(5)
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[2]/div/div[2]/div/div/span"))).click()
@@ -111,7 +116,7 @@ while True:  # Infinite loop until the file is downloaded
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/main/div/div[2]/div[3]/div/select/option[2]"))).click()
         time.sleep(5)
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/footer/button[1]"))).click()
-        time.sleep(50)
+        time.sleep(30)
 
         if is_file_downloaded():
             log.info("✅ File download complete!")
@@ -157,7 +162,7 @@ try:
     client = gspread.authorize(creds)
 
     sheet = client.open_by_key("1z6Zb_BronrO26rNS_gCKmsetoY7_OFysfIyvU3iazy0")
-    worksheet = sheet.worksheet("Sheet4")
+    worksheet = sheet.worksheet("Consumption_data_apr_24_curent_date")
 
     if df.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")

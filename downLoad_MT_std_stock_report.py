@@ -105,9 +105,9 @@ while True:
         # === Step 5 to 8: Generate and Export report ===
         log.info("Trying to download the stock file")
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/header/nav/div[1]/div[2]/button/span"))).click()
-        time.sleep(2)
+        time.sleep(5)
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/header/nav/div[1]/div[2]/div/a[1]"))).click()
-        time.sleep(2)
+        time.sleep(5)
 
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[2]/div/div[2]/button"))).click()
         time.sleep(5)
@@ -126,10 +126,10 @@ while True:
         time.sleep(5)
 
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[2]/div/div[2]/div/button"))).click()
-        time.sleep(3)
+        time.sleep(5)
 
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div/div[1]/div/div[2]/div/div[2]/div/div/span[1]"))).click()
-        time.sleep(3)
+        time.sleep(5)
 
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/main/div/div[2]/div[3]/div/select"))).click()
         time.sleep(5)
@@ -139,7 +139,7 @@ while True:
 
         wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div/footer/button[1]"))).click()
 
-        time.sleep(30)
+        time.sleep(50)
 
         # === Step 9: Confirm file downloaded ===
         if is_file_downloaded():
