@@ -168,7 +168,7 @@ try:
         print("Data pasted to Google Sheet (Sheet4).")
         local_tz = pytz.timezone('Asia/Dhaka')
         local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-        worksheet.update("AA2", [[f"{local_time}"]])
+        worksheet.update("Y2", [[f"{local_time}"]])
         log.info(f"✅ Data pasted & timestamp updated: {local_time}")
 
     

@@ -163,7 +163,7 @@ try:
         set_with_dataframe(worksheet_MT_inv, df)
         local_tz = pytz.timezone('Asia/Dhaka')
         local_time = datetime.now(local_tz).strftime("%Y-%m-%d %H:%M:%S")
-        worksheet_MT_inv.update("AA2", [[f"{local_time}"]])
+        worksheet_MT_inv.update("Y2", [[f"{local_time}"]])
         log.info(f"✅ Data pasted & timestamp updated: {local_time}")
     
 except Exception as e:
