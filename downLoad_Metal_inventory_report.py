@@ -158,7 +158,7 @@ try:
     if df.empty:
         print("Skip: DataFrame is empty, not pasting to sheet.")
     else:
-        worksheet_MT_inv.clear()
+        worksheet_MT_inv.batch_clear(['A:AA'])
         time.sleep(4)
         set_with_dataframe(worksheet_MT_inv, df)
         local_tz = pytz.timezone('Asia/Dhaka')
