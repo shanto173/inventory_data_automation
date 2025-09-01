@@ -123,15 +123,15 @@ jobs:
           echo "${{ secrets.GCREDS_JSON }}" | base64 -d > gcreds.json
 
 
-      - name: Run downLoad_zip_Ageing
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_zip_Ageing.py
+      # - name: Run downLoad_zip_Ageing
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python downLoad_zip_Ageing.py
 
-      - name: Run downLoad_MT_Ageing
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_MT_Ageing.py
+      # - name: Run downLoad_MT_Ageing
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python downLoad_MT_Ageing.py
 
         
 
@@ -146,57 +146,57 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
         run: python downLoad_inventory_report_consumption.py
       
-      - name: Run std stock script
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_std_stock_report.py
+      # - name: Run std stock script
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python downLoad_std_stock_report.py
 
-      - name: Run inventory script
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_inventory_report.py
+      # - name: Run inventory script
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python downLoad_inventory_report.py
 
-      - name: Run MT_pending_slider_count
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python MT_pending_slider_count.py
+      # - name: Run MT_pending_slider_count
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python MT_pending_slider_count.py
 
-      - name: Run downLoad_MT_std_stock_report
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_MT_std_stock_report.py
+      # - name: Run downLoad_MT_std_stock_report
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python downLoad_MT_std_stock_report.py
 
-      - name: Run downLoad_Metal_inventory_report
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_Metal_inventory_report.py
+      # - name: Run downLoad_Metal_inventory_report
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python downLoad_Metal_inventory_report.py
 
-      - name: Run pending_slider_count script
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python pending_slider_count.py
+      # - name: Run pending_slider_count script
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python pending_slider_count.py
 
      
 
-      - name: Run Invoice_summary
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_Invoice_summary.py
+      # - name: Run Invoice_summary
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python downLoad_Invoice_summary.py
 
-      - name: Run order_relased
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_order_relased.py
+      # - name: Run order_relased
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python downLoad_order_relased.py
 
-      - name: Run downLoad_MT_Invoice_summary
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_MT_Invoice_summary.py
+      # - name: Run downLoad_MT_Invoice_summary
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python downLoad_MT_Invoice_summary.py
 
-      - name: Run downLoad_MT_order_relased
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
-        run: python downLoad_MT_order_relased.py
+      # - name: Run downLoad_MT_order_relased
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: gcreds.json
+      #   run: python downLoad_MT_order_relased.py
         
 
       - name: Run supabaseConnection only between 9–10 AM BD time (UTC+6)
